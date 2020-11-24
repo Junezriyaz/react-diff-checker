@@ -11,72 +11,76 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      code: '// type your code...',
-    }
+      originalText: "",
+      changedText: "",
+      differenceText: "",
+    };
   }
+
   editorDidMount(editor, monaco) {
-    console.log('editorDidMount', editor);
     editor.focus();
   }
-  onChange(newValue, e) {
-    console.log('onChange', newValue, e);
+
+  onChangeOriginalText(newValue, e) {
+    this.setState({
+      originalText: newValue,
+    });
   }
+
+  onChangeChangedText(newValue, e) {
+    this.setState({
+      changedText: newValue,
+    });
+  }
+
   render() {
-    const code = this.state.code;
     const options = {
-      selectOnLineNumbers: true
+      selectOnLineNumbers: true,
       //renderSideBySide: false
     };
-    const code1 = "// your original code...";
-    const code2 = "// a different version...";
+
     return (
       <Container fluid>
         <Row>
-          <Col className='header'>
+          <Col className="header">
             <h3>Diff Checker</h3>
           </Col>
         </Row>
         <Row>
           <Col className="editor-block" lg={6} md={12}>
-            <p className='text-center'>Original Text</p>
+            <p className="text-center">Original Text</p>
             <MonacoEditor
               height="45vh"
               language="text/plane"
               theme="vs"
-              value={code}
+              value={this.state.originalText}
               options={options}
-              onChange={this.onChange}
+              onChange={this.onChangeOriginalText.bind(this)}
               editorDidMount={this.editorDidMount}
             />
           </Col>
           <Col className="editor-block" lg={6} md={12}>
-            <p className='text-center'>Changed Text</p>
+            <p className="text-center">Changed Text</p>
             <MonacoEditor
               height="45vh"
-              language="javascript"
+              language="text/plane"
               theme="vs"
-              value={code}
+              value={this.state.changedText}
               options={options}
-              onChange={this.onChange}
+              onChange={this.onChangeChangedText.bind(this)}
               editorDidMount={this.editorDidMount}
             />
           </Col>
         </Row>
-        <Row>
-          <Col className="text-center">
-            <hr/>
-            <Button className="diff-btn">Check Diff</Button>
-            <hr/>
-          </Col>
-        </Row>
+        <hr />
         <Row>
           <Col className="editor-block diff-editor">
-          <p className='text-center'>Difference</p>
+            <p className="text-center">Difference</p>
             <MonacoDiffEditor
               height="45vh"
-              language="javascript"
-              original={code1}
-              value={code2}
+              language="text/plane"
+              original={this.state.originalText}
+              value={this.state.changedText}
               options={options}
             />
           </Col>
